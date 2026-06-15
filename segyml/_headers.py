@@ -90,13 +90,12 @@ def parse_text_header(data: bytes) -> str:
         raise ValueError(f"Not enough data for text header: {len(data)} bytes < {TEXT_HEADER_SIZE}")
     raw = data[:TEXT_HEADER_SIZE]
     # If it looks like ASCII already, use it directly
-    try:
-        text = raw.decode('ascii').rstrip()
-        # Check if it contains mostly printable characters
-        if sum(32 <= c <= 126 for c in text) > len(text) * 0.9:
-            return text
-    except UnicodeDecodeError:
-        pass
+    # Check raw bytes: most should be printable ASCII
+    if sum(32 <= b <= 126 for b in raw) > len(raw) * 0.9:
+        try:
+            return raw.decode('ascii').rstrip()
+        except UnicodeDecodeError:
+            pass
     return ebcdic_to_ascii(raw)
 
 

@@ -21,12 +21,9 @@ inlines = np.arange(1000, 1000 + n_traces, dtype=np.int32)
 crosslines = np.full(n_traces, 500, dtype=np.int32)
 
 for i in range(n_traces):
-    shift = int(20 * np.sin(i * 0.1) + 10)
+    shift = int(10 * np.sin(i * 0.1) + 5)
     amp = 1.0 + 0.5 * np.sin(i * 0.05)
-    if shift + n_samples < n_samples:
-        data[i, shift:] = wavelet[:n_samples - shift] * amp
-    else:
-        data[i, :] = np.roll(wavelet, shift % n_samples) * amp
+    data[i, :] = np.roll(wavelet, shift) * amp
 
 print(f"Generated: {n_traces} traces × {n_samples} samples")
 
@@ -41,7 +38,7 @@ print("Written: demo.sgy")
 # 3. Load back
 loaded, hdr = segyml.load("demo.sgy")
 print(f"Loaded: {loaded.shape}")
-print(f"Sample interval: {hdr['binary_header']['dt']} µs")
+print(f"Sample interval: {hdr['binary_header']['dt']} us")
 print(f"First trace inline: {hdr['traces'][0]['inline']}")
 
 # 4. Visualize
