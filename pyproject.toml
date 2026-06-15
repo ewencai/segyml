@@ -1,0 +1,43 @@
+[project]
+name = "segyml"
+version = "0.1.0"
+description = "SEG-Y seismic data I/O library with PyTorch integration"
+readme = "README.md"
+license = {file = "LICENSE"}
+authors = [
+    {name = "Ewen Cai"}
+]
+keywords = ["seg-y", "seismic", "geophysics", "pytorch", "segy"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "numpy>=1.20",
+]
+
+[project.optional-dependencies]
+viz = ["matplotlib>=3.5"]
+torch = ["torch>=1.10"]
+all = ["segyml[viz,torch]"]
+
+[project.urls]
+Homepage = "https://github.com/ewencai/segyml"
+Repository = "https://github.com/ewencai/segyml"
+Issues = "https://github.com/ewencai/segyml/issues"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
