@@ -4,7 +4,7 @@ Usage:
     >>> import segyml
     >>> data, headers = segyml.load("survey.segy")
     >>> tensor, headers = segyml.load("survey.segy", backend="torch")
-    >>> segyml.save(data, "output.segy", dt=4000)
+    >>> segyml.save("output.segy", data, dt=4000)
     >>> n = segyml.asc2segy("raw_asc/", "output.segy")
     >>> segyml.wiggle(data[:, :100], dt=0.004)
 """

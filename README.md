@@ -1,8 +1,8 @@
 # segyml — Python SEG-Y Library with ML Integration
 
-[![PyPI](https://img.shields.io/badge/pypi-segyml-blue)](https://pypi.org/project/segyml/)
 [![Python](https://img.shields.io/badge/python-3.9%2B-brightgreen)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-GPL%20v2-green)](./LICENSE)
+[![status](https://img.shields.io/badge/status-alpha-orange)](#)
 
 **segyml** is a lightweight, fast Python library for reading, writing, and converting SEG-Y seismic data files. Built for the AI era: load seismic data directly into PyTorch tensors with one line of code.
 
@@ -15,17 +15,15 @@
 
 ## Installation
 
+> Not yet published on PyPI. Install from source:
+
 ```bash
-pip install segyml
-
-# With PyTorch support
-pip install segyml[torch]
-
-# With visualization
-pip install segyml[viz]
-
-# Everything
-pip install segyml[all]
+git clone https://github.com/ewencai/segyml.git
+cd segyml
+pip install -e .            # core (numpy only)
+pip install -e ".[torch]"   # + PyTorch backend
+pip install -e ".[viz]"     # + visualization
+pip install -e ".[all]"     # everything
 ```
 
 ## Quick Start
@@ -43,7 +41,7 @@ tensor, headers = segyml.load("survey.segy", backend="torch")
 # → torch.Tensor, ready for your neural network
 
 # Write SEG-Y
-segyml.save(data, "output.segy", dt=4000)
+segyml.save("output.segy", data, dt=4000)
 
 # Batch convert ASC files to SEG-Y
 segyml.asc2segy("X:/raw_data/", "merged.segy")
@@ -110,4 +108,4 @@ GPL v2 — see [LICENSE](./LICENSE)
 
 ---
 
-Built by [Ewen Cai](https://github.com/ewencai). Based on decades of SEG-Y processing expertise from the field.
+Built by [Ewen Cai](https://github.com/ewencai).
