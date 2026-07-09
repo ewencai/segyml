@@ -53,26 +53,28 @@ FORMAT_BYTES = {
 }
 
 # Trace header byte offsets and formats (key SEG-Y fields)
+# Most fields are 4-byte big-endian ints ('>i'), but number-of-samples and
+# sample-interval are 2-byte unsigned shorts ('>H') per the SEG-Y standard.
 _TRACE_HEADER_MAP = {
-    # (byte_offset, struct_format, name, description)
-    0:  ('trace_seq_line', 'Trace sequence number within line'),
-    4:  ('trace_seq_file', 'Trace sequence number within file'),
-    8:  ('original_field_record', 'Original field record number'),
-    12: ('trace_number_field', 'Trace number within field record'),
-    20: ('cdp', 'CDP ensemble number'),
-    24: ('trace_number_cdp', 'Trace number within CDP ensemble'),
-    36: ('source_x', 'Source coordinate X'),
-    40: ('source_y', 'Source coordinate Y'),
-    72: ('receiver_x', 'Receiver group coordinate X'),
-    76: ('receiver_y', 'Receiver group coordinate Y'),
-    84: ('group_x', 'Group coordinate X'),
-    88: ('group_y', 'Group coordinate Y'),
-    108:('dt', 'Sample interval (microseconds)'),
-    114:('n_samples', 'Number of samples in this trace'),
-    156:('inline', 'Inline number (Rev 1)'),
-    160:('crossline', 'Crossline number (Rev 1)'),
-    180:('x', 'X coordinate (Rev 1)'),
-    188:('y', 'Y coordinate (Rev 1)'),
+    # offset: (name, struct_format, description)
+    0:  ('trace_seq_line', '>i', 'Trace sequence number within line'),
+    4:  ('trace_seq_file', '>i', 'Trace sequence number within file'),
+    8:  ('original_field_record', '>i', 'Original field record number'),
+    12: ('trace_number_field', '>i', 'Trace number within field record'),
+    20: ('cdp', '>i', 'CDP ensemble number'),
+    24: ('trace_number_cdp', '>i', 'Trace number within CDP ensemble'),
+    36: ('source_x', '>i', 'Source coordinate X'),
+    40: ('source_y', '>i', 'Source coordinate Y'),
+    72: ('receiver_x', '>i', 'Receiver group coordinate X'),
+    76: ('receiver_y', '>i', 'Receiver group coordinate Y'),
+    84: ('group_x', '>i', 'Group coordinate X'),
+    88: ('group_y', '>i', 'Group coordinate Y'),
+    114:('n_samples', '>H', 'Number of samples in this trace (bytes 115-116)'),
+    116:('dt', '>H', 'Sample interval for this trace, microseconds (bytes 117-118)'),
+    156:('inline', '>i', 'Inline number (Rev 1)'),
+    160:('crossline', '>i', 'Crossline number (Rev 1)'),
+    180:('x', '>i', 'X coordinate (Rev 1)'),
+    188:('y', '>i', 'Y coordinate (Rev 1)'),
 }
 
 
@@ -139,9 +141,8 @@ def parse_trace_header(data: bytes) -> Dict[str, Any]:
         raise ValueError(f"Not enough data for trace header: {len(data)} bytes < {TRACE_HEADER_SIZE}")
 
     h = {}
-    for offset, (name, _desc) in _TRACE_HEADER_MAP.items():
-        # All standard SEG-Y trace header fields are 4-byte big-endian ints
-        h[name] = struct.unpack_from('>i', data, offset)[0]
+    for offset, (name, fmt, _desc) in _TRACE_HEADER_MAP.items():
+        h[name] = struct.unpack_from(fmt, data, offset)[0]
     return h
 
 

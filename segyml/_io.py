@@ -228,8 +228,8 @@ def write_segy(
             struct.pack_into('>i', hdr, 0, i + 1)           # trace_seq_line
             struct.pack_into('>i', hdr, 4, i + 1)           # trace_seq_file
             struct.pack_into('>i', hdr, 20, i + 1)          # cdp
-            struct.pack_into('>H', hdr, 108, dt)            # dt
-            struct.pack_into('>H', hdr, 114, n_samples)     # n_samples
+            struct.pack_into('>H', hdr, 114, n_samples)     # n_samples (bytes 115-116)
+            struct.pack_into('>H', hdr, 116, dt)            # dt, µs (bytes 117-118)
 
             if inline is not None:
                 struct.pack_into('>i', hdr, 156, int(inline[i]))
@@ -246,11 +246,11 @@ def write_segy(
 
             # Merge custom trace headers if provided
             if trace_headers and i < len(trace_headers):
+                from ._headers import _TRACE_HEADER_MAP
                 for key, val in trace_headers[i].items():
-                    from ._headers import _TRACE_HEADER_MAP
-                    for offset, (name, _) in _TRACE_HEADER_MAP.items():
+                    for offset, (name, fmt, _) in _TRACE_HEADER_MAP.items():
                         if name == key:
-                            struct.pack_into('>i', hdr, offset, int(val))
+                            struct.pack_into(fmt, hdr, offset, int(val))
                             break
 
             f.write(bytes(hdr))

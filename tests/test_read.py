@@ -83,6 +83,28 @@ class TestRoundtrip:
         finally:
             os.unlink(tmp_path)
 
+    def test_trace_header_dt_nsamples(self):
+        """Trace-header dt and n_samples are 2-byte fields and must round-trip.
+
+        Regression: they were previously read as 4-byte ints, yielding
+        n_samples * 65536 (e.g. 300 -> 19660800).
+        """
+        n_traces, n_samples = 3, 300
+        data = np.random.randn(n_traces, n_samples).astype(np.float32)
+
+        with tempfile.NamedTemporaryFile(suffix='.segy', delete=False) as f:
+            tmp_path = f.name
+
+        try:
+            segyml.save(tmp_path, data, dt=2000)
+            loaded, headers = segyml.load(tmp_path)
+            assert loaded.shape == (n_traces, n_samples)
+            for tr in headers['traces']:
+                assert tr['n_samples'] == n_samples
+                assert tr['dt'] == 2000
+        finally:
+            os.unlink(tmp_path)
+
 
 class TestTraceSelection:
     def test_slice_traces(self):
