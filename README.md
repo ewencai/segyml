@@ -2,6 +2,7 @@
 
 [![Python](https://img.shields.io/badge/python-3.9%2B-brightgreen)](https://www.python.org/)
 [![License](https://img.shields.io/badge/license-GPL%20v2-green)](./LICENSE)
+[![tests](https://github.com/ewencai/segyml/actions/workflows/tests.yml/badge.svg)](https://github.com/ewencai/segyml/actions/workflows/tests.yml)
 [![status](https://img.shields.io/badge/status-alpha-orange)](#)
 
 **segyml** is a lightweight, fast Python library for reading, writing, and converting SEG-Y seismic data files. Built for the AI era: load seismic data directly into PyTorch tensors with one line of code.
